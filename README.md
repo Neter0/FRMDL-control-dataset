@@ -2,7 +2,7 @@
 
 ## Property Tested
 
-This dataset tests whether an image classification model can distinguish **global** and **local** shape information in the same image. More specifically, it tests hierarchical visual recognition: the ability to identify a large-scale shape formed by the spatial arrangement of smaller repeated shapes, while also recognizing the identity of those smaller constituent shapes.
+This dataset tests whether an image classification model can distinguish **global** and **local** shape information in the same image.  More specifically, it tests hierarchical visual recognition: the ability to identify a large-scale shape formed by the spatial arrangement of smaller repeated shapes, while also recognizing the identity of those smaller constituent shapes. 
 
 ## Motivation
 
@@ -22,6 +22,8 @@ This gives a total of 3 × 3 = 9 possible global-local combinations. For example
 | --------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
 | ![](hierarchical_shapes/train/images/circle_square_0.png) | ![](hierarchical_shapes/train/images/triangle_circle_0.png) | ![](hierarchical_shapes/train/images/square_triangle_0.png) |
 
+**Figure 1. Example global-local shape compositions.** Each image shows a different pairing of global and local shape labels. The examples illustrate that the global label depends on the large-scale arrangement, while the local label depends on the repeated small shapes.
+
 ## Generation Procedure
 
 The dataset is generated using a small set of helper functions. The `draw_shape` function receives a bounding box, defined by the top-left and bottom-right coordinates, and draws the requested shape within that region. The `make_global_mask` function creates a black image of the same size as the final output, then draws the selected global shape in white inside the boundary defined by the `margin` parameter. This mask is used to determine where local shapes are allowed to be placed.
@@ -37,6 +39,10 @@ The `generate_split` function creates a dataset split from a specified list of `
 The in-distribution setting checks whether a model can recognize global-local combinations that come from the same distribution as the training data. This corresponds to ordinary supervised recognition over the nine possible hierarchical shape classes.
 
 The out-of-distribution setting is more interesting. In this setting, some global-local combinations are held out during training and only appear at test time. For example, a model may see circles, squares, and triangles as both global and local shapes, but never see a large circle made of small triangles during training. This tests whether the model has learned the compositional structure of the task, rather than merely memorizing observed global-local pairings.
+
+## Limitations
+
+The dataset is intentionally synthetic and uses only three simple shape types. This makes the tested property easy to control, but it also limits the conclusions that can be drawn. The dataset should therefore be treated as a diagnostic control dataset for hierarchical global-local recognition, not as a general benchmark for real-world object recognition.
 
 ## Links
 
